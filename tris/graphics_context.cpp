@@ -76,20 +76,16 @@ void graphics_context::present()
 
 void graphics_context::render()
 {
-    SDL_Rect rect;
-    rect.w = 100;
-    rect.h = 100;
-    rect.x = 50;
-    rect.y = 50;
-
-    this->render_rect(&rect);
+    this->my_box.rect.x += 2;
+    this->my_box.rect.y += 1;
+    this->render_box(&this->my_box);
 }
 
 
-void graphics_context::render_rect(SDL_Rect* rect)
+void graphics_context::render_box(box* p_box)
 {
-    SDL_SetRenderDrawColor(this->renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(this->renderer, rect);
+    SDL_SetRenderDrawColor(this->renderer, p_box->r, p_box->g, p_box->b, p_box->a);
+    SDL_RenderFillRect(this->renderer, &p_box->rect);
 }
 
 

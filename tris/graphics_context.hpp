@@ -11,6 +11,7 @@
 //using std::list;
 
 #include "exception.hpp"
+#include "box.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -45,6 +46,8 @@ private:
     string window_title;
     int window_width, window_height;
 
+    box my_box = box(100, 100, 0, 0, 0xFFFFFFFF);
+
 //    map<string, SDL_Texture*> loaded_textures;
 //    map<string, TTF_Font*> loaded_fonts;
 //    list<texture_reference*> referenced_textures;
@@ -59,7 +62,7 @@ public:
     void present();
 
     void render();
-    void render_rect(SDL_Rect* rect);
+    void render_box(box* p_box);
 
 //    SDL_Surface* load_surface(const string& filename);
 //    SDL_Texture* load_texture(const string& filename);
