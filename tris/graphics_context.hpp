@@ -46,7 +46,8 @@ private:
     string window_title;
     int window_width, window_height;
 
-    box my_box = box(100, 100, 0, 0, 0xFFFFFFFF);
+    box my_box = box(100, 100, 0, 0, 255, 255, 255, 255);
+    box my_box2 = box(50, 200, 0, 0, 128, 0, 0, 128);
 
 //    map<string, SDL_Texture*> loaded_textures;
 //    map<string, TTF_Font*> loaded_fonts;

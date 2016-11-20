@@ -12,15 +12,12 @@ class box
 {
 public:
     SDL_Rect rect;
-    union {
-        uint32_t rgba;
-        uint8_t a,b,g,r;
-    };
+    uint8_t r,g,b,a;
     double angle = 0;
 
     SDL_Texture* tex = nullptr;
 
-    box(int w, int h, int x, int y, uint32_t rgba);
+    box(int w, int h, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
     ~box();
 };
 

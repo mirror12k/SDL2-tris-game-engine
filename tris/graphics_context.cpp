@@ -78,8 +78,12 @@ void graphics_context::render()
 {
     this->my_box.rect.x += 2;
     this->my_box.rect.y += 1;
-    this->my_box.angle += 15;
+    this->my_box.angle += 0.1;
     this->render_box(&this->my_box);
+    this->my_box2.rect.x += 2;
+    this->my_box2.rect.y += 1;
+    this->my_box2.angle += 4;
+    this->render_box(&this->my_box2);
 }
 
 
@@ -91,6 +95,11 @@ void graphics_context::render_box(box* p_box)
         SDL_SetRenderTarget(this->renderer, p_box->tex);
         SDL_SetRenderDrawColor(this->renderer, p_box->r, p_box->g, p_box->b, p_box->a);
         SDL_RenderFillRect(this->renderer, nullptr);
+
+        if (p_box->a == 255)
+            SDL_SetTextureBlendMode(p_box->tex, SDL_BLENDMODE_NONE);
+        else
+            SDL_SetTextureBlendMode(p_box->tex, SDL_BLENDMODE_BLEND);
 
         SDL_SetRenderTarget(this->renderer, nullptr);
     }
