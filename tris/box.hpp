@@ -16,8 +16,12 @@ public:
         uint32_t rgba;
         uint8_t a,b,g,r;
     };
+    double angle = 0;
+
+    SDL_Texture* tex = nullptr;
 
     box(int w, int h, int x, int y, uint32_t rgba);
+    ~box();
 };
 
 }

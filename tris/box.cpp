@@ -15,6 +15,13 @@ box::box(int w, int h, int x, int y, uint32_t rgba)
     this->rgba = rgba;
 }
 
+box::~box()
+{
+    if (this->tex != nullptr)
+        SDL_DestroyTexture(this->tex);
+}
+
+
 
 }
 

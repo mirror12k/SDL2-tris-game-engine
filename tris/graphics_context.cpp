@@ -78,14 +78,24 @@ void graphics_context::render()
 {
     this->my_box.rect.x += 2;
     this->my_box.rect.y += 1;
+    this->my_box.angle += 15;
     this->render_box(&this->my_box);
 }
 
 
 void graphics_context::render_box(box* p_box)
 {
-    SDL_SetRenderDrawColor(this->renderer, p_box->r, p_box->g, p_box->b, p_box->a);
-    SDL_RenderFillRect(this->renderer, &p_box->rect);
+    if (p_box->tex == nullptr)
+    {
+        p_box->tex = SDL_CreateTexture(this->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, p_box->rect.w, p_box->rect.h);
+        SDL_SetRenderTarget(this->renderer, p_box->tex);
+        SDL_SetRenderDrawColor(this->renderer, p_box->r, p_box->g, p_box->b, p_box->a);
+        SDL_RenderFillRect(this->renderer, nullptr);
+
+        SDL_SetRenderTarget(this->renderer, nullptr);
+    }
+
+    SDL_RenderCopyEx(this->renderer, p_box->tex, nullptr, &p_box->rect, p_box->angle, nullptr, SDL_FLIP_NONE);
 }
 
 
