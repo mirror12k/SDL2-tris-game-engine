@@ -2,6 +2,9 @@
 #include "graphics_context.hpp"
 
 
+#include <algorithm>
+
+
 namespace tris
 {
 
@@ -76,27 +79,27 @@ void graphics_context::present()
 
 void graphics_context::render()
 {
-    this->my_box.rect.x += 2;
-    this->my_box.rect.y += 1;
-    this->my_box.angle += 0.1;
-    this->render_box(&this->my_box);
-    this->my_box2.rect.x += 2;
-    this->my_box2.rect.y += 1;
-    this->my_box2.angle += 4;
-    this->render_box(&this->my_box2);
+    for (vector<box*>::iterator iter = this->boxes.begin(), iter_end = this->boxes.end(); iter != iter_end; iter++)
+        this->render_box(*iter);
 }
 
 
 void graphics_context::render_box(box* p_box)
 {
-    if (p_box->tex == nullptr)
+    if (p_box->tex == nullptr || p_box->changed)
     {
+        if (p_box->changed)
+        {
+            p_box->changed = false;
+            if (p_box->tex != nullptr)
+                SDL_DestroyTexture(p_box->tex);
+        }
         p_box->tex = SDL_CreateTexture(this->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, p_box->rect.w, p_box->rect.h);
         SDL_SetRenderTarget(this->renderer, p_box->tex);
-        SDL_SetRenderDrawColor(this->renderer, p_box->r, p_box->g, p_box->b, p_box->a);
+        SDL_SetRenderDrawColor(this->renderer, p_box->rgba.r, p_box->rgba.g, p_box->rgba.b, p_box->rgba.a);
         SDL_RenderFillRect(this->renderer, nullptr);
 
-        if (p_box->a == 255)
+        if (p_box->rgba.a == 255)
             SDL_SetTextureBlendMode(p_box->tex, SDL_BLENDMODE_NONE);
         else
             SDL_SetTextureBlendMode(p_box->tex, SDL_BLENDMODE_BLEND);
@@ -105,6 +108,25 @@ void graphics_context::render_box(box* p_box)
     }
 
     SDL_RenderCopyEx(this->renderer, p_box->tex, nullptr, &p_box->rect, p_box->angle, nullptr, SDL_FLIP_NONE);
+}
+
+
+void graphics_context::add_box(box* p_box)
+{
+    this->boxes.push_back(p_box);
+}
+
+void graphics_context::remove_box(box* p_box)
+{
+    auto it = std::find(this->boxes.begin(), this->boxes.end(), p_box);
+
+    if (it != this->boxes.end())
+    {
+        std::swap(*it, this->boxes.back());
+        this->boxes.pop_back();
+    }
+    else
+        throw graphics_exception("invalid box pointer given to graphics_context::remove_box");
 }
 
 

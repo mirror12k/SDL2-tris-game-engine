@@ -9,6 +9,8 @@
 //
 //#include <list>
 //using std::list;
+#include <vector>
+using std::vector;
 
 #include "exception.hpp"
 #include "box.hpp"
@@ -38,7 +40,7 @@ public:
 
 class graphics_context
 {
-private:
+public:
     SDL_Window* window;
     SDL_Surface* screen;
     SDL_Renderer* renderer;
@@ -46,13 +48,12 @@ private:
     string window_title;
     int window_width, window_height;
 
-    box my_box = box(100, 100, 0, 0, 255, 255, 255, 255);
-    box my_box2 = box(50, 200, 0, 0, 128, 0, 0, 128);
+    vector<box*> boxes;
 
 //    map<string, SDL_Texture*> loaded_textures;
 //    map<string, TTF_Font*> loaded_fonts;
 //    list<texture_reference*> referenced_textures;
-public:
+
     graphics_context(const string& window_title, int window_width, int window_height);
     ~graphics_context();
 
@@ -64,6 +65,9 @@ public:
 
     void render();
     void render_box(box* p_box);
+
+    void add_box(box* p_box);
+    void remove_box(box* p_box);
 
 //    SDL_Surface* load_surface(const string& filename);
 //    SDL_Texture* load_texture(const string& filename);

@@ -12,6 +12,7 @@ namespace tris
 engine::engine(const string& window_title, int window_width, int window_height, uint fps)
 :
 graphics(window_title, window_width, window_height),
+update_ctx(this),
 fps(fps)
 {
 //    this->entity_data = new update_context();
@@ -42,7 +43,8 @@ void engine::run()
         SDL_PumpEvents();
         this->check_input();
 
-//        this->entity_data->update();
+        this->update_ctx.update();
+
         this->graphics.clear();
 //        this->entity_data->draw(&this->graphics);
         this->graphics.render();
