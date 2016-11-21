@@ -2,11 +2,9 @@
 #include <stdio.h>
 
 
-#include "tris/engine.hpp"
+#include "tris/tris.hpp"
 
 
-#include <cmath>
-const double pi = std::acos(-1);
 
 
 class my_entity : public tris::entity
@@ -17,7 +15,7 @@ public:
     int sx, sy;
 
     my_entity(int x, int y, int sx, int sy)
-    : my_box(50, 50, x-25, y-25, 128, 255, 128, 255), sx(sx), sy(sy)
+    : my_box(100, 100, x-25, y-25, 128, 255, 128, 255), sx(sx), sy(sy)
     {}
 
     virtual void update (tris::engine* eng)
@@ -46,6 +44,8 @@ public:
     : my_entity(x, y, sx, sy), step_a(step_a)
     {
         this->my_box.angle = step_angle;
+        this->my_box.rgba.a = 128 + 127 * std::sin(pi * (this->step_a / 180.0));
+        this->my_box.changed = true;
     }
 
     virtual void update (tris::engine* eng)
@@ -55,25 +55,6 @@ public:
         this->my_box.changed = true;
 
         this->step_a = (this->step_a + 8) % 360;
-    }
-};
-
-class fps_ticker_entity : public tris::entity
-{
-public:
-    uint tick = 0;
-    uint frame = 0;
-
-    virtual void update(tris::engine* eng)
-    {
-        if (this->tick == time(nullptr))
-            this->frame++;
-        else
-        {
-            printf("fps: %d\n", this->frame);
-            this->tick = time(nullptr);
-            this->frame = 0;
-        }
     }
 };
 
@@ -89,9 +70,10 @@ int main ()
 //    my_game.update_ctx.add_entity(new my_invis(100, 100, 1, 2, 0));
 //    my_game.update_ctx.add_entity(new my_entity(100, 100, 3, 1));
 //    my_game.update_ctx.add_entity(new my_entity(100, 100, 1, 3));
-    my_game.update_ctx.add_entity(new fps_ticker_entity());
+    my_game.update_ctx.add_entity(new tris::util::fps_ticker_entity());
+    my_game.update_ctx.add_entity(new tris::util::frame_benchmark_entity(300));
 
-    for (int i = 0; i < 400; i++)
+    for (int i = 0; i < 1000; i++)
         my_game.update_ctx.add_entity(new my_invis(rand() % my_game.graphics.window_width, rand() % my_game.graphics.window_height,
                 1 + rand() % 5, 1 + rand() % 5, rand() % 360, 1 + rand() % 360));
     my_game.run();

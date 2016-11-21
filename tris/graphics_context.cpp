@@ -80,33 +80,25 @@ void graphics_context::present()
 void graphics_context::render()
 {
     for (vector<box*>::iterator iter = this->boxes.begin(), iter_end = this->boxes.end(); iter != iter_end; iter++)
+        if ((*iter)->tex == nullptr || (*iter)->changed)
+            this->load_box(*iter);
+    for (vector<box*>::iterator iter = this->boxes.begin(), iter_end = this->boxes.end(); iter != iter_end; iter++)
         this->render_box(*iter);
 }
 
+void graphics_context::load_box(box* p_box)
+{
+    if (p_box->changed)
+    {
+        p_box->changed = false;
+        if (p_box->tex != nullptr)
+            SDL_DestroyTexture(p_box->tex);
+    }
+    p_box->render(this->renderer);
+}
 
 void graphics_context::render_box(box* p_box)
 {
-    if (p_box->tex == nullptr || p_box->changed)
-    {
-        if (p_box->changed)
-        {
-            p_box->changed = false;
-            if (p_box->tex != nullptr)
-                SDL_DestroyTexture(p_box->tex);
-        }
-        p_box->tex = SDL_CreateTexture(this->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, p_box->rect.w, p_box->rect.h);
-        SDL_SetRenderTarget(this->renderer, p_box->tex);
-        SDL_SetRenderDrawColor(this->renderer, p_box->rgba.r, p_box->rgba.g, p_box->rgba.b, p_box->rgba.a);
-        SDL_RenderFillRect(this->renderer, nullptr);
-
-        if (p_box->rgba.a == 255)
-            SDL_SetTextureBlendMode(p_box->tex, SDL_BLENDMODE_NONE);
-        else
-            SDL_SetTextureBlendMode(p_box->tex, SDL_BLENDMODE_BLEND);
-
-        SDL_SetRenderTarget(this->renderer, nullptr);
-    }
-
     SDL_RenderCopyEx(this->renderer, p_box->tex, nullptr, &p_box->rect, p_box->angle, nullptr, SDL_FLIP_NONE);
 }
 

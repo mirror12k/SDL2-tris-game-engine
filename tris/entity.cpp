@@ -7,6 +7,8 @@ namespace tris
 {
 
 
+entity::~entity()
+{}
 
 
 void entity::update(engine* eng)

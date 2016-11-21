@@ -64,6 +64,7 @@ public:
     void present();
 
     void render();
+    void load_box(box* p_box);
     void render_box(box* p_box);
 
     void add_box(box* p_box);

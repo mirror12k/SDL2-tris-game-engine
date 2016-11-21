@@ -40,15 +40,19 @@ void engine::run()
     {
         std::clock_t start_frame_tick = clock();
 
+//        printf("start frame: %ld\n", start_frame_tick);
         SDL_PumpEvents();
         this->check_input();
 
         this->update_ctx.update();
+//        printf("after frame update: %d\n", clock() - start_frame_tick);
 
         this->graphics.clear();
-//        this->entity_data->draw(&this->graphics);
+//        printf("after frame clear: %d\n", clock() - start_frame_tick);
         this->graphics.render();
+//        printf("after frame render: %d\n", clock() - start_frame_tick);
         this->graphics.present();
+//        printf("after frame present: %d\n", clock() - start_frame_tick);
 
 //        if ((this->loading_scene != nullptr) && (this->loading_scene->is_ready()))
 //        {
