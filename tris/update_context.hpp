@@ -2,10 +2,15 @@
 #pragma once
 
 
+#include <map>
+using std::map;
+
 #include <vector>
 using std::vector;
 
+#include "exception.hpp"
 #include "entity.hpp"
+#include "service_entity.hpp"
 
 
 namespace tris
@@ -20,6 +25,8 @@ public:
     vector<entity*> entities_to_add;
     vector<entity*> entities_to_remove;
 
+    map<string, service_entity*> services;
+
     engine* parent_engine;
 
     update_context(engine* parent_engine);
@@ -30,8 +37,25 @@ public:
 
     void add_entity(entity* ent);
     void remove_entity(entity* ent);
+
+    template<class service_type>
+    service_type* get_service(const string& service_name);
+    void add_service(const string& service_name, service_entity* ent);
+    void remove_service(const string& service_name, service_entity* ent);
 };
 
+
+
+
+template<class service_type>
+service_type* update_context::get_service(const string& service_name)
+{
+    auto it = this->services.find(service_name);
+    if (it == this->services.end())
+        throw generic_exception("request for undefined service '" + service_name + "'");
+    else
+        return (service_type*)it->second;
+}
 
 
 }

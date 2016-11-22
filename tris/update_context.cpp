@@ -65,6 +65,16 @@ void update_context::remove_entity(entity* ent)
 }
 
 
+void update_context::add_service(const string& service_name, service_entity* ent)
+{
+    this->services[service_name] = ent;
+}
+void update_context::remove_service(const string& service_name, service_entity* ent)
+{
+    this->services.erase(service_name);
+}
+
+
 }
 
 

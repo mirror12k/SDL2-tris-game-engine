@@ -59,7 +59,7 @@ public:
 void example_invis_boxes()
 {
     srand(time(nullptr));
-    tris::engine my_game("test engine", 800, 640, 60);
+    tris::engine my_game("invisible boxes example", 800, 640, 60);
 
     my_game.update_ctx.add_entity(new tris::util::fps_ticker_entity());
 
