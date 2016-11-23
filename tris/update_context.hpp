@@ -52,7 +52,12 @@ service_type* update_context::get_service(const string& service_name)
 {
     auto it = this->services.find(service_name);
     if (it == this->services.end())
-        throw generic_exception("request for undefined service '" + service_name + "'");
+    {
+        string service_list = "";
+        for (auto it = this->services.begin(); it != this->services.end(); it++)
+            service_list += it->first + ",";
+        throw generic_exception("request for undefined service '" + service_name + "', available services are: " + service_list);
+    }
     else
         return (service_type*)it->second;
 }
