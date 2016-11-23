@@ -101,8 +101,8 @@ public:
         uint* it_end = this->field_energy;
         it_end += this->field_size_x * this->field_size_y;
         for (uint* it = this->field_energy; it != it_end; it++)
-            if ((*it += rand() % (2 + *it / 16)) > this->max_tile_energy)
-                *it -= rand() % (2 + *it / 8);
+            if ((*it += rand() % (1 + *it / 16)) > this->max_tile_energy)
+                *it -= rand() % (1 + *it / 8);
     }
 };
 
@@ -148,20 +148,24 @@ public:
         this->my_box.rect.x += this->sx;
         if (this->my_box.rect.x + 5 >= eng->graphics.window_width || this->my_box.rect.x + 5 < 0)
         {
-            this->sx = -this->sx;
+//            this->my_box.rect.x += eng->graphics.window_width;
+//            this->my_box.rect.x %= eng->graphics.window_width;
+//            this->sx = -this->sx;
             if (this->my_box.rect.x + 5 >= eng->graphics.window_width)
-                this->my_box.rect.x = eng->graphics.window_width - 6;
-            else
                 this->my_box.rect.x = -4;
+            else
+                this->my_box.rect.x = eng->graphics.window_width - 6;
         }
         this->my_box.rect.y += this->sy;
         if (this->my_box.rect.y + 5 >= eng->graphics.window_height || this->my_box.rect.y + 5 < 0)
         {
-            this->sy = -this->sy;
+            this->my_box.rect.y += eng->graphics.window_height;
+            this->my_box.rect.y %= eng->graphics.window_height;
+//            this->sy = -this->sy;
             if (this->my_box.rect.y + 5 >= eng->graphics.window_height)
-                this->my_box.rect.y = eng->graphics.window_height - 6;
-            else
                 this->my_box.rect.y = -4;
+            else
+                this->my_box.rect.y = eng->graphics.window_height - 6;
         }
     }
 
@@ -198,11 +202,11 @@ public:
             if (ent->age++ > ent->max_age && rand() % 25 == 0)
                 eng->update_ctx.remove_entity(ent);
             // decrease energy as living cost, check if its out of energy
-            else if ((ent->energy -= 5 + ent->my_box.rgba.g / 16 - ent->my_box.rgba.r / 64) < 0)
+            else if ((ent->energy -= 10 + ent->my_box.rgba.g / 32 + ent->my_box.rgba.b / 16 + ent->my_box.rgba.r / 64) < 0)
                 eng->update_ctx.remove_entity(ent);
             else
             {
-                if (rand() % 512 < ent->my_box.rgba.b)
+                if (rand() % 1024 < ent->my_box.rgba.b)
                 {
 //                float rand_sx = ent->sx - 1 + rand() % 3;
 //                float rand_sy = ent->sy - 1 + rand() % 3;
@@ -215,7 +219,8 @@ public:
                 {
                     life_box* other = *it2;
                     int dist = std::abs(other->my_box.rect.x - ent->my_box.rect.x + other->my_box.rect.y - ent->my_box.rect.y);
-                    if (dist < 16)
+                    if (dist < 32 && rand() % (1 + std::abs(ent->my_box.rgba.r - other->my_box.rgba.r) +
+                            std::abs(ent->my_box.rgba.g - other->my_box.rgba.g) + std::abs(ent->my_box.rgba.b - other->my_box.rgba.b)) < 32)
                     {
                         float boid_dist = 1.0 / (1 + dist);
                         if (boid_dist == 0)
@@ -243,7 +248,7 @@ public:
                 ent->sx += - 1 + rand() % 3;
                 ent->sy += - 1 + rand() % 3;
 
-                int speed_limit = 2 + ent->my_box.rgba.g / 64;
+                int speed_limit = 3 + ent->my_box.rgba.g / 64;
                 float speed = pow(pow(ent->sx, 2) + pow(ent->sy, 2), 0.5);
                 if (speed > speed_limit)
                 {
@@ -257,25 +262,27 @@ public:
 
                 // consume energy from the tile
                 int energy = srv->get_tile_energy(ent->my_box.rect.x + 5, ent->my_box.rect.y + 5);
-                int consumed = energy / (16 + rand() % 7 - ent->my_box.rgba.b / 16);
-                ent->energy += consumed;
+                int consumed = energy / (16 + rand() % 7 - ent->my_box.rgba.r / 32 - ent->my_box.rgba.g / 64);
+                ent->energy += consumed * ent->my_box.rgba.b / 32;
 //                consumed -= rand() % (1 + ent->my_box.rgba.r / 8);
                 srv->add_tile_energy(ent->my_box.rect.x + 5, ent->my_box.rect.y + 5, -consumed);
 
                 // check if it needs to multiply due to having enough energy
-                if (ent->energy > 512 + ent->my_box.rgba.r * 8 && rand() % 4 == 0)
+                if (ent->energy > 512 + ent->my_box.rgba.b * 2 + ent->my_box.rgba.g * 2 && rand() % (4 + ent->my_box.rgba.b / 8) == 0)
                 {
                     life_box* clone = ent->clone();
-                    clone->energy /= 16 + ent->my_box.rgba.g / 16;
-                    ent->energy /= 16 + ent->my_box.rgba.g / 16;
+                    clone->energy /= 16 + ent->my_box.rgba.g / 64 - ent->my_box.rgba.r / 64;
+//                    clone->energy += ent->my_box.rgba.b * 2;
+                    ent->energy /= 16 + ent->my_box.rgba.g / 64 - ent->my_box.rgba.r / 64;
+//                    ent->energy += ent->my_box.rgba.b * 2;
                     eng->update_ctx.add_entity(clone);
 
-                    for (int i = 0; i < 4; i++)
+                    for (int i = 0; i < 2; i++)
                         if (rand() % 256 < ent->my_box.rgba.r)
                         {
                             life_box* clone = ent->clone();
-                            clone->energy /= 16 + ent->my_box.rgba.g / 16 - ent->my_box.rgba.b / 32;
-                            ent->energy /= 16 + ent->my_box.rgba.g / 16 - ent->my_box.rgba.b / 32;
+                            clone->energy /= 16 + ent->my_box.rgba.g / 64 - ent->my_box.rgba.r / 64;
+//                            ent->energy /= 16 + ent->my_box.rgba.g / 64 - ent->my_box.rgba.r / 64;
                             eng->update_ctx.add_entity(clone);
                         }
                 }
