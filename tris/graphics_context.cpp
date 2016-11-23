@@ -77,11 +77,15 @@ void graphics_context::present()
 
 
 
-void graphics_context::render()
+void graphics_context::prepare_boxes()
 {
     for (vector<box*>::iterator iter = this->boxes.begin(), iter_end = this->boxes.end(); iter != iter_end; iter++)
         if ((*iter)->tex == nullptr || (*iter)->changed)
             this->load_box(*iter);
+}
+
+void graphics_context::render()
+{
     for (vector<box*>::iterator iter = this->boxes.begin(), iter_end = this->boxes.end(); iter != iter_end; iter++)
         this->render_box(*iter);
 }

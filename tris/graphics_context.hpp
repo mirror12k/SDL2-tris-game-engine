@@ -63,6 +63,7 @@ public:
     void clear();
     void present();
 
+    void prepare_boxes();
     void render();
     void load_box(box* p_box);
     void render_box(box* p_box);

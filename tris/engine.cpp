@@ -49,6 +49,7 @@ void engine::run()
 
         this->graphics.clear();
 //        printf("after frame clear: %d\n", clock() - start_frame_tick);
+        this->graphics.prepare_boxes();
         this->graphics.render();
 //        printf("after frame render: %d\n", clock() - start_frame_tick);
         this->graphics.present();
