@@ -96,7 +96,10 @@ void graphics_context::load_box(box* p_box)
     {
         p_box->changed = false;
         if (p_box->tex != nullptr)
+        {
             SDL_DestroyTexture(p_box->tex);
+            p_box->tex = nullptr;
+        }
     }
     p_box->render(this->renderer);
 }
