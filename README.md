@@ -15,8 +15,8 @@ this box is rendered once into a texture, and that texture is copied onto the fi
 tris::box can be extended to provide custom texture renderinga
 
 ## screenshots
-![alt text](https://raw.githubusercontent.com/mirror12k/SDL2-tris-game-engine/master/screenshots/screen1.png)
-![alt text](https://raw.githubusercontent.com/mirror12k/SDL2-tris-game-engine/master/screenshots/screen2.png)
-![alt text](https://raw.githubusercontent.com/mirror12k/SDL2-tris-game-engine/master/screenshots/screen3.png)
-![alt text](https://raw.githubusercontent.com/mirror12k/SDL2-tris-game-engine/master/screenshots/screen4.png)
-![alt text](https://raw.githubusercontent.com/mirror12k/SDL2-tris-game-engine/master/screenshots/screen5.png)
+![alt text](https://raw.githubusercontent.com/mirror12k/SDL2-tris-game-engine/master/screenshots/example1.png)
+![alt text](https://raw.githubusercontent.com/mirror12k/SDL2-tris-game-engine/master/screenshots/example2.png)
+![alt text](https://raw.githubusercontent.com/mirror12k/SDL2-tris-game-engine/master/screenshots/example3.png)
+![alt text](https://raw.githubusercontent.com/mirror12k/SDL2-tris-game-engine/master/screenshots/example4.png)
+![alt text](https://raw.githubusercontent.com/mirror12k/SDL2-tris-game-engine/master/screenshots/example5.png)
